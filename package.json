@@ -5,7 +5,9 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "nodemon index.js",
+		"start": "node index.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -16,5 +18,8 @@
 		"axios": "^0.26.1",
 		"dotenv": "^16.0.0",
 		"express": "^4.17.3"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.15"
 	}
 }
