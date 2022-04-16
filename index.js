@@ -8,6 +8,7 @@ config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+app.set("view engine", "ejs");
 app.use((req, next) => {
 	console.log("Request at: ", req.url);
 	next();
