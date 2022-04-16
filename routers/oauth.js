@@ -1,7 +1,10 @@
 import { Router } from "express";
 
+import startSlackOAuth from "../controllers/oauth/startSlackOAuth";
+
 const OAuthRouter = Router();
 
-OAuthRouter.get("/slackoauthredirect", (req, res) => res.sendStatus(200));
+OAuthRouter.get("/startslackauth", startSlackOAuth);
+OAuthRouter.get("/slackoauthredirect", (_, res) => res.sendStatus(200));
 
 export default OAuthRouter;
