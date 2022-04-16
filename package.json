@@ -1,0 +1,19 @@
+{
+	"name": "slack-status-rotater",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@slack/oauth": "^2.5.1",
+		"@slack/web-api": "^6.7.1",
+		"axios": "^0.26.1",
+		"express": "^4.17.3"
+	}
+}
