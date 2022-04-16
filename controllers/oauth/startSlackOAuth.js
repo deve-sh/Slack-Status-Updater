@@ -17,7 +17,7 @@ const startSlackOAuth = async (req, res) => {
 		stateSecret: stateSecret,
 	});
 
-	const installURL = installer.generateInstallUrl({
+	const installURL = await installer.generateInstallUrl({
 		scopes: ["identify", "users.profile:read", "users.profile:write"],
 	});
 
