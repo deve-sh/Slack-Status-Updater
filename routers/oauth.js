@@ -1,6 +1,6 @@
-import { Router } from "express";
+const { Router } = require("express");
 
-import startSlackOAuth from "../controllers/oauth/startSlackOAuth.js";
+const startSlackOAuth = require("../controllers/oauth/startSlackOAuth");
 
 const OAuthRouter = Router();
 
