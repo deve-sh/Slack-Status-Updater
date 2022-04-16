@@ -1,5 +1,5 @@
-import { SERVER_ERROR } from "../../constants";
-import { InstallProvider } from "@slack/oauth";
+const { InstallProvider } = require("@slack/oauth");
+const { SERVER_ERROR } = require("../../constants");
 
 const startSlackOAuth = async (req, res) => {
 	const message = (status, message) => res.status(status).json({ message });
@@ -24,4 +24,4 @@ const startSlackOAuth = async (req, res) => {
 	res.redirect(installURL);
 };
 
-export default startSlackOAuth;
+module.exports = startSlackOAuth;

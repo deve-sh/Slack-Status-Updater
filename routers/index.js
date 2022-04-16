@@ -1,9 +1,9 @@
-import { Router } from "express";
+const { Router } = require("express");
 
-import OAuthRouter from "./oauth";
+const OAuthRouter = require("./oauth");
 
 const APIRouter = Router();
 
 APIRouter.use("/oauth", OAuthRouter);
 
-export default APIRouter;
+module.exports = APIRouter;

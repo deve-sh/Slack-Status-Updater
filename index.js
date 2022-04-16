@@ -1,5 +1,7 @@
-import express from "express";
-import { config } from "dotenv";
+const express = require("express");
+const { config } = require("dotenv");
+
+const APIRouter = require("./routers/index");
 
 config();
 

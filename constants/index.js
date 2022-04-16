@@ -1,1 +1,1 @@
-export const SERVER_ERROR = "Something went wrong, please try again later.";
+exports.SERVER_ERROR = "Something went wrong, please try again later.";
