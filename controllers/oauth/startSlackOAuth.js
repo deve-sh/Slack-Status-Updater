@@ -15,7 +15,7 @@ const startSlackOAuth = async (_, res) => {
 	const installer = new InstallProvider({
 		clientId,
 		clientSecret,
-		stateSecret: stateSecret,
+		stateSecret,
 	});
 
 	const installURL = await installer.generateInstallUrl({

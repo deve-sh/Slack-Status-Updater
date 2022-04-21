@@ -14,7 +14,7 @@ const startSlackOAuth = async (req, res) => {
 	const installer = new InstallProvider({
 		clientId,
 		clientSecret,
-		stateSecret: stateSecret,
+		stateSecret,
 	});
 
 	return installer.handleCallback(req, res);
