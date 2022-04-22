@@ -1,9 +1,8 @@
 const express = require("express");
 const { config } = require("dotenv");
+config();
 
 const APIRouter = require("./routers/index");
-
-config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
