@@ -1,26 +1,39 @@
+const qs = require("qs");
 const { SERVER_ERROR } = require("../../constants");
 
 const startSlackOAuth = async (req, res) => {
 	const message = (status, message) => res.status(status).json({ message });
 	const clientId = process.env.SLACK_CLIENT_ID;
-	const stateSecret = process.env.SLACK_STATE_SECRET;
+	const clientSecret = process.env.SLACK_CLIENT_SECRET;
+	const slackRedirectUrl = process.env.SLACK_REDIRECT_URL;
 
-	if (!clientId || !stateSecret) return message(500, SERVER_ERROR);
+	if (!clientId || !clientSecret || !slackRedirectUrl)
+		return message(500, SERVER_ERROR);
 
-	const installer = require("../../utils/slackInstallProvider");
+	const { code } = req.query;
 
-	const callbackOptions = {
-		success: (installation, installOptions, _, res) => {
-			console.log(installOptions, installation);
-			return res.sendStatus(200);
-		},
-		failure: (error, _, __, res) => {
-			console.log("Slack App Installation Error: ", error);
-			return res.redirect("/");
-		},
-	};
+	if (!code) return message(400, "Invalid Request");
 
-	return installer.handleCallback(req, res, callbackOptions);
+	// Get the access token and other info for the user and workspace.
+	const axios = require("axios");
+	try {
+		const requestBody = qs.stringify({
+			code,
+			redirect_uri: slackRedirectUrl,
+			client_id: clientId,
+			client_secret: clientSecret,
+		});
+		const resp = await axios.post(
+			"https://slack.com/api/oauth.v2.access",
+			requestBody,
+			{ headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+		);
+		if (!resp.data.ok) throw new Error(resp.data.error);
+		return res.json(resp.data);
+	} catch (err) {
+		console.log("Error during token retreival: ", err);
+		return message(500, SERVER_ERROR);
+	}
 };
 
 module.exports = startSlackOAuth;
