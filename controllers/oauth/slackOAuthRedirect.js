@@ -1,5 +1,6 @@
 const qs = require("qs");
 const { SERVER_ERROR } = require("../../constants");
+const admin = require("../../firebase");
 
 const startSlackOAuth = async (req, res) => {
 	const message = (status, message) => res.status(status).json({ message });
@@ -29,9 +30,18 @@ const startSlackOAuth = async (req, res) => {
 			{ headers: { "Content-Type": "application/x-www-form-urlencoded" } }
 		);
 		if (!resp.data.ok) throw new Error(resp.data.error);
+
+		await admin
+			.firestore()
+			.collection("usertokens")
+			.doc(resp.data.authed_user.id)
+			.set({ ...resp.data, createdAt: new Date(), updatedAt: new Date() });
 		return res.json(resp.data);
 	} catch (err) {
-		console.log("Error during token retreival: ", err);
+		console.log(
+			"Error during token retreival and storage to database: ",
+			err && err.response && err.response.data ? err.response.data : err
+		);
 		return message(500, SERVER_ERROR);
 	}
 };
