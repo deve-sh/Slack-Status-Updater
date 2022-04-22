@@ -19,8 +19,6 @@ const startSlackOAuth = async (_, res) => {
 	const installURL =
 		process.env.SLACK_OAUTH_START_LINK + "?" + urlParams.toString();
 
-	console.log({ installURL });
-
 	res.redirect(installURL);
 };
 
