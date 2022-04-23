@@ -4,6 +4,6 @@ const updateStatus = require("../controllers/hooks/updateStatus");
 
 const HooksRouter = Router();
 
-HooksRouter.post("/updateStatus", updateStatus);
+HooksRouter.post("/updatestatus", updateStatus);
 
 module.exports = HooksRouter;
