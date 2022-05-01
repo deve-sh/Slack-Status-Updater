@@ -3,12 +3,7 @@ const axios = require("axios");
 const qs = require("qs");
 
 module.exports = async (req, res) => {
-	const message = (text) =>
-		res.json({
-			text,
-			message: text,
-			response_type: "ephemeral",
-		});
+	const message = (text) => res.json({ text, message: text });
 	try {
 		const { team_id = "", event = {} } = req.body || {};
 		const { type, user: user_id } = event;
