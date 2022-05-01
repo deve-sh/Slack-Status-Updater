@@ -2,6 +2,7 @@
 const axios = require("axios");
 const qs = require("qs");
 const getBotToken = require("../../utils/getBotToken");
+const appHome = require("../../views/slackBlotKit/appHome");
 
 module.exports = async (req, res) => {
 	const message = (text) => res.json({ text, message: text });
@@ -13,31 +14,7 @@ module.exports = async (req, res) => {
 			const botToken = await getBotToken(team_id);
 			if (botToken) {
 				const botToken = userToken.access_token;
-				const view = JSON.stringify({
-					type: "home",
-					title: {
-						type: "plain_text",
-						text: "Slack Status Updater",
-					},
-					blocks: [
-						{
-							type: "section",
-							text: {
-								type: "mrkdwn",
-								text: "*Welcome!* \nThis is the home for Status Updater app. You can update your slack status here.",
-							},
-							accessory: {
-								type: "button",
-								action_id: "open_status_updater_form",
-								text: {
-									type: "plain_text",
-									text: "Update Your Status",
-								},
-							},
-						},
-						{ type: "divider" },
-					],
-				});
+				const view = JSON.stringify(appHome());
 				const args = { user_id, view };
 				const response = await axios.post(
 					"https://slack.com/api/views.publish",
