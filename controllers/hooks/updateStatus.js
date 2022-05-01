@@ -1,5 +1,6 @@
 /* Slash Command to update status for a set amount of time. */
 const axios = require("axios");
+const getUserToken = require("../../utils/getUserToken");
 
 module.exports = async (req, res) => {
 	const message = (text) =>
@@ -18,10 +19,7 @@ module.exports = async (req, res) => {
 		message(`Updating your status <@${user_id}>`);
 
 		// Process the data and send back response using the `response_url` property received from Slack in the body.
-		const admin = require("../../firebase");
-		const userToken = (
-			await admin.firestore().collection("usertokens").doc(user_id).get()
-		).data();
+		const userToken = await getUserToken(user_id);
 		if (!userToken)
 			return message(
 				`<@${user_id}> 😕 Uh oh! You have not authorized us to perform this action on your behalf yet. Please install our app for you in this workspace using the 'Add Apps' section.`
