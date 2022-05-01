@@ -1,7 +1,7 @@
 const axios = require("axios");
 const qs = require("qs");
 const getBotToken = require("../../utils/getBotToken");
-const getStatusUpdateModalView = require("../../utils/getStatusUpdateModalView");
+const statusUpdateModalView = require("../../views/slackBlotKit/statusUpdateModalView");
 
 module.exports = async (req, res) => {
 	try {
@@ -20,12 +20,12 @@ module.exports = async (req, res) => {
 			const [botToken] = await getBotToken(team.id);
 			if (!botToken) return;
 
-			const statusUpdateModalView = getStatusUpdateModalView();
+			const statusUpdateModalViewBlocks = statusUpdateModalView();
 
 			const args = {
 				token: botToken,
 				trigger_id: trigger_id,
-				view: JSON.stringify(statusUpdateModalView),
+				view: JSON.stringify(statusUpdateModalViewBlocks),
 			};
 
 			await axios.post("https://slack.com/api/views.open", qs.stringify(args));
