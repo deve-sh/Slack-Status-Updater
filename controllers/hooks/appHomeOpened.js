@@ -13,7 +13,6 @@ module.exports = async (req, res) => {
 		if (type === "app_home_opened") {
 			const botToken = await getBotToken(team_id);
 			if (botToken) {
-				const botToken = userToken.access_token;
 				const view = JSON.stringify(appHome());
 				const args = { user_id, view };
 				const response = await axios.post(
