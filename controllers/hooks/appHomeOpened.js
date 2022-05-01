@@ -10,14 +10,22 @@ module.exports = async (req, res) => {
 			response_type: "ephemeral",
 		});
 	try {
-		const { type, user: user_id } = req.body.event;
+		const { team_id = "", event = {} } = req.body || {};
+		const { type, user: user_id } = event;
 
 		if (type === "app_home_opened") {
 			// Process the data and send back response using the `response_url` property received from Slack in the body.
 			const admin = require("../../firebase");
-			const userToken = (
-				await admin.firestore().collection("usertokens").doc(user_id).get()
-			).data();
+			// Any user's token info matching the team id, to extract the bot token for the workspace/team.
+			let userToken = (
+				await admin
+					.firestore()
+					.collection("usertokens")
+					.where("team.id", "==", team_id)
+					.limit(1)
+					.get()
+			).docs;
+			if (userToken[0] && userToken[0].data()) userToken = userToken[0].data();
 			if (
 				userToken &&
 				userToken.token_type === "bot" &&
