@@ -1,6 +1,7 @@
 // Endpoint to serve/publish a view on the app_home_opened event.
 const axios = require("axios");
 const qs = require("qs");
+const getBotToken = require("../../utils/getBotToken");
 
 module.exports = async (req, res) => {
 	const message = (text) => res.json({ text, message: text });
@@ -9,23 +10,8 @@ module.exports = async (req, res) => {
 		const { type, user: user_id } = event;
 
 		if (type === "app_home_opened") {
-			// Process the data and send back response using the `response_url` property received from Slack in the body.
-			const admin = require("../../firebase");
-			// Any user's token info matching the team id, to extract the bot token for the workspace/team.
-			let userToken = (
-				await admin
-					.firestore()
-					.collection("usertokens")
-					.where("team.id", "==", team_id)
-					.limit(1)
-					.get()
-			).docs;
-			if (userToken[0] && userToken[0].data()) userToken = userToken[0].data();
-			if (
-				userToken &&
-				userToken.token_type === "bot" &&
-				userToken.access_token
-			) {
+			const botToken = await getBotToken(team_id);
+			if (botToken) {
 				const botToken = userToken.access_token;
 				const view = JSON.stringify({
 					type: "home",
