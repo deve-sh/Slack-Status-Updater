@@ -3,16 +3,28 @@ const qs = require("qs");
 const getBotToken = require("../../utils/getBotToken");
 const getUserToken = require("../../utils/getUserToken");
 const statusUpdateModalView = require("../../views/slackBlotKit/statusUpdateModalView");
+const getBaseExpiryISOTime = require("../../utils/getBaseExpiryISOTime");
+const getTodayISOString = require("../../utils/getTodayISOString");
 
 module.exports = async (req, res) => {
 	try {
-		res.sendStatus(200);
+		res.send("");
 		const payload = JSON.parse(req.body.payload || "{}");
-		const { trigger_id, team = {}, type, user, actions = [], view } = payload;
-		if (!(team && user && actions && team.id && user.id && actions.length))
-			return;
+		const {
+			trigger_id,
+			team = {},
+			type,
+			user,
+			actions = [],
+			view = {},
+		} = payload;
+		if (!(team && user && team.id && user.id)) return;
 
-		if (actions[0].action_id === "open_status_updater_form") {
+		if (
+			actions &&
+			actions.length &&
+			actions[0].action_id === "open_status_updater_form"
+		) {
 			const botToken = await getBotToken(team.id);
 			if (!botToken) return;
 
@@ -34,13 +46,21 @@ module.exports = async (req, res) => {
 
 			// Format user's slack status.
 			const text =
-				view.state.values.status_text_and_emoji.content.value || "💬 Away";
-			const emojiPattern = /:.*:\s/;
+				view.state.values.status_text_and_emoji.status_text_and_emoji.value ||
+				"💬 Away";
+			const expiryTimeEntered =
+				view.state.values.status_expiry_time.status_expiry_time.selected_time ||
+				getBaseExpiryISOTime();
+			const expiryDateEntered =
+				view.state.values.status_expiry_date.status_expiry_date.selected_date ||
+				getTodayISOString();
 			const statusPattern = /[\w\s\d\-]+/;
 
-			const emoji = (text.match(emojiPattern) || ["💬"])[0].trim();
 			const statusText = (text.match(statusPattern) || ["Away"])[0].trim();
-			const statusExpiresAt = new Date(new Date().getTime() + 86400 * 1000);
+			const emoji = text.split(statusPattern)[0].trim() || "💬";
+			const statusExpiresAt = new Date(
+				`${expiryDateEntered}T${expiryTimeEntered}:00`
+			);
 
 			await axios.post(
 				`https://slack.com/api/users.profile.set`,
@@ -48,7 +68,7 @@ module.exports = async (req, res) => {
 					profile: {
 						status_text: statusText,
 						status_emoji: emoji,
-						status_expiration: statusExpiresAt,
+						status_expiration: parseInt(statusExpiresAt / 1000),
 					},
 				},
 				{
@@ -57,6 +77,7 @@ module.exports = async (req, res) => {
 					},
 				}
 			);
+			return;
 		}
 	} catch (err) {
 		console.log(err);
