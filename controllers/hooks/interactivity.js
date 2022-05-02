@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
 			return;
 
 		if (actions[0].action_id === "open_status_updater_form") {
-			const [botToken] = await getBotToken(team.id);
+			const botToken = await getBotToken(team.id);
 			if (!botToken) return;
 
 			const statusUpdateModalViewBlocks = statusUpdateModalView();
