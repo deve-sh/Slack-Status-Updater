@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
 			"https://slack.com/api/users.getPresence",
 			{
 				headers: {
-					Authorization: `Bearer ${userToken.authed_user.access_token}`,
+					Authorization: `Bearer ${userToken}`,
 				},
 			}
 		);
@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
 			{ presence: presence === "active" ? "away" : "auto" },
 			{
 				headers: {
-					Authorization: `Bearer ${userToken.authed_user.access_token}`,
+					Authorization: `Bearer ${userToken}`,
 				},
 			}
 		);

@@ -63,7 +63,7 @@ module.exports = async (req, res) => {
 			},
 			{
 				headers: {
-					Authorization: `Bearer ${userToken.authed_user.access_token}`,
+					Authorization: `Bearer ${userToken}`,
 				},
 			}
 		);
